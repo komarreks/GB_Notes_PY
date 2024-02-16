@@ -10,6 +10,11 @@ def doCommand(charin, data, id=None):
         Notes.getAllNotesDateCreate(data)
     elif charin[:1] == 'p':
         Notes.printNote(data, charin[2:])
+    elif charin[:3] == 'del':
+        if id != None:
+            Notes.deleteNote(data, id)
+        else:
+            Notes.deleteNote(data, charin[4:])
     elif charin == 'm':
         return False
     else:

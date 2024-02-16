@@ -37,7 +37,6 @@ def addNote(data):
 
     print("Заметка сохранена")
 
-
 def printAllNotes(data):
     maxLengthHead = 45
     maxLenghtText = 71
@@ -152,9 +151,13 @@ def footerCommand(text, data, id=None):
     while wait:
         charin = input(text)
         wait = Executor.doCommand(charin, data, id)
+    return wait
 
 
 def printNote(data, id):
+    if data.get(id) == None:
+        print("Заметки с таким номером не существует")
+        return
     printChangeText = ""
     horLine = "="*25
     if data[id][2] != data[id][3]:
@@ -168,3 +171,11 @@ def printNote(data, id):
     footerCommand("('del' - удалить заметку\n"
                   "'red' - редактировать заметку\n"
                   "'m' - возврат в главное меню): ", data, id)
+
+
+def deleteNote(data, id):
+    if data.get(id) == None:
+        print("Заметки с таким номером нет")
+        return
+    data.pop(id)
+    print("Заметка удалена")
