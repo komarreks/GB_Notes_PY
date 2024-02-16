@@ -12,11 +12,7 @@ def openRepository():
 def createRepository():
     checkWorkDirectory()
     if not os.path.exists("notes/notes.json"):
-        # note = namedtuple('note',['head', 'text', 'dateCreate', 'dateChange'])
         data = collections.OrderedDict()
-        # data.setdefault(int, note)
-        # newNote = note('Заголовок','текст','дата')
-        # data[0] = newNote
         with open("notes/notes.json",'w') as jsonFile:
             json.dump(data, jsonFile)
 

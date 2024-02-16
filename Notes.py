@@ -1,7 +1,10 @@
 import collections
 import os.path
+from colorama import Fore
 from collections import namedtuple
 from datetime import date
+
+import Executor
 
 
 def addNote(data):
@@ -30,7 +33,7 @@ def addNote(data):
         sorted(data.keys())
         lastIndex = int(next(reversed(data)))
         newIndex = lastIndex + 1
-        data[newIndex] = newNote
+        data[str(newIndex)] = newNote
 
     print("Заметка сохранена")
 
@@ -68,7 +71,12 @@ def printAllNotes(data):
         print(idText + headText + noteText + createDateText + changeDateText + "|")
         print('_' * lenHorizontalLine)
 
-    input("\nнажмите любую клавишу...")
+    footerCommand("\n('p номер_заметки' - открыть заметку\n"
+                  "'red номер_заметки' - редактировать заметку\n"
+                  "'del номер_заметки' - удалить заметку\n"
+                  "'m' - назад): ", data)
+
+
 def getAllNotesDateCreate(data):
     tempData = collections.OrderedDict()
 
@@ -90,7 +98,8 @@ def getAllNotesDateCreate(data):
     print("Выберите дату, 'q' - выход")
 
     for key, value in dateDict.items():
-        print(str(key) + " - " + str(value) + " (" + str(dateInfoDict[value]) + niceRussianNotes(str(dateInfoDict[value])) +")")
+        print(str(key) + " - " + str(value) + " (" + str(dateInfoDict[value]) + niceRussianNotes(
+            str(dateInfoDict[value])) + ")")
 
     notValidIndex = True
     dateIndex = 0
@@ -136,3 +145,26 @@ def getFormalizeText(text, lenght, addFinalText):
         head = ' ' * left + text
     headText = "|" + head + ' ' * (lenght - len(head))
     return headText
+
+
+def footerCommand(text, data, id=None):
+    wait = True
+    while wait:
+        charin = input(text)
+        wait = Executor.doCommand(charin, data, id)
+
+
+def printNote(data, id):
+    printChangeText = ""
+    horLine = "="*25
+    if data[id][2] != data[id][3]:
+        printChangeText = ", изменена " + data[id][3]
+
+    print("")
+    print(Fore.YELLOW ,horLine + "Заметка номер: " + id + " от " + data[id][2] + printChangeText+horLine)
+    print("Заголовок: " + data[id][0])
+    print("Текст: " + data[id][1])
+    print(Fore.WHITE)
+    footerCommand("('del' - удалить заметку\n"
+                  "'red' - редактировать заметку\n"
+                  "'m' - возврат в главное меню): ", data, id)
