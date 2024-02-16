@@ -148,15 +148,16 @@ def getFormalizeText(text, lenght, addFinalText):
 
 def footerCommand(text, data, id=None):
     wait = True
-    while wait:
-        charin = input(text)
-        wait = Executor.doCommand(charin, data, id)
-    return wait
+    # while wait:
+    charin = input(text)
+    wait = Executor.doCommand(charin, data, id)
+    # return False
 
 
 def printNote(data, id):
     if data.get(id) == None:
         print("Заметки с таким номером не существует")
+        footerCommand("Повторите ввод: ", data)
         return
     printChangeText = ""
     horLine = "="*25
@@ -166,8 +167,9 @@ def printNote(data, id):
     print("")
     print(Fore.YELLOW ,horLine + "Заметка номер: " + id + " от " + data[id][2] + printChangeText+horLine)
     print("Заголовок: " + data[id][0])
-    print("Текст: " + data[id][1])
-    print(Fore.WHITE)
+    print("Текст: \n" + data[id][1])
+    print(Fore.RESET)
+
     footerCommand("('del' - удалить заметку\n"
                   "'red' - редактировать заметку\n"
                   "'m' - возврат в главное меню): ", data, id)
@@ -178,4 +180,33 @@ def deleteNote(data, id):
         print("Заметки с таким номером нет")
         return
     data.pop(id)
-    print("Заметка удалена")
+    input("Заметка удалена, для продолжения нажмите любую клавишу...")
+
+
+def changeNoteText(data, id):
+    if data.get(id) == None:
+        print("Заметки с таким номером нет")
+        return
+    print("Если не хотите менять заголовок или текст просто нажмите ENTER")
+    print("Текущий заголовок:")
+    print(Fore.YELLOW, data[id][0])
+    print(Fore.RESET,"")
+    newHeader = input("Новый заголовок: \n")
+    isChanged = False
+    if len(newHeader) != 0:
+        data[id][0] = newHeader
+        isChanged = True
+    print("Текущий текст:")
+    print(Fore.YELLOW, data[id][1])
+    print(Fore.RESET, "")
+    newText = input("Введите новый текст:\n")
+    if len(newText) != 0:
+        data[id][1] = newText
+        isChanged = True
+
+    if isChanged:
+        changeDate = date.today().strftime("%d.%m.%Y")
+        data[id][3] = changeDate
+        input("Заметка удачно изменена, для продолжения нажмите любую клавишу...")
+    else:
+        input("Изменения не зафиксированы, нажмите любую клавишу...")
